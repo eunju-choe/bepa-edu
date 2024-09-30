@@ -5,6 +5,10 @@ import zipfile
 
 app = Flask(__name__)
 
+# PORT 환경 변수 사용
+port = int(os.environ.get("PORT", 5000))
+app.run(host="0.0.0.0", port=port)
+
 # 업로드 경로 설정
 UPLOAD_FOLDER = 'uploads'
 PROCESSED_FOLDER = 'processed'
