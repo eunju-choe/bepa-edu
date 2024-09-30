@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>다운로드 완료</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            color: #333;
+        }
+        .download-links {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        a {
+            display: block;
+            padding: 10px;
+            color: white;
+            background-color: #007bff;
+            text-decoration: none;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+        .back-button {
+            margin-top: 15px;
+            background-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <h1>처리가 완료되었습니다!</h1>
+    <div class="download-links">
+        <p>다음 파일을 다운로드할 수 있습니다:</p>
+        <a href="/download/1">"과정명 일치" 다운로드</a>
+        <a href="/download/2">"이름 개수 불일치" 다운로드</a>
+        <a href="/download/3">"띄어쓰기 제거" 다운로드</a>
+        <a href="/download/4">"모든 파일 압축" 다운로드</a> <!-- Zip download link -->
+        <div>
+            <a href="/" class="back-button">메인 페이지로 돌아가기</a>
+        </div>
+    </div>
+</body>
+</html>
