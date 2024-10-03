@@ -6,57 +6,82 @@
     <title>처리 결과</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-            background-color: #f9f9f9;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f9f9f9, #e0e0e0);
             color: #333;
+            padding: 0 20px; /* 좌우 여백 추가 */
         }
         h1 {
             text-align: center;
             color: #0056b3;
-            margin-top: 40px; /* 제목 위 여백 추가 */
-            margin-bottom: 20px; /* 제목 아래 여백 추가 */
+            margin: 40px 0;
+            font-size: 2.5em;
+            animation: shine 1.5s infinite;
+        }
+        @keyframes shine {
+            0% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(255, 255, 255, 1); }
+            100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
         }
         h2 {
-            margin-top: 40px;
+            margin: 20px 0 10px; /* 위쪽 여백 조정 */
             color: #333;
+            text-align: justify; /* 양쪽 정렬 */
+            font-size: 1.8em;
+        }
+        .divider {
+            height: 2px; /* 선의 두께 조정 */
+            background-color: #b6b6b6; /* 연한 색상 */
+            margin: 30px 0; /* 위아래 여백 조정 */
         }
         .table-container {
-            overflow-x: auto; /* 가로 스크롤 추가 */
-            margin-top: 10px;
+            overflow-x: auto;
+            margin: 10px auto;
+            max-width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background-color: #fff;
+            padding: 20px;
         }
         table {
             border-collapse: collapse;
             width: 100%;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
         }
         th, td {
             border: 1px solid #ddd;
             padding: 12px;
             text-align: left;
-            white-space: nowrap; /* 줄바꿈 방지 */
+            white-space: nowrap;
         }
         th {
             background-color: #f2f2f2;
             font-weight: bold;
         }
         td.highlight {
-            background-color: #ffdddd; /* 중복된 데이터 강조 */
+            background-color: #ffdddd;
         }
         a {
             display: inline-block;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            padding: 8px 15px;
+            margin: 5px auto; /* 버튼과 h2 사이 여백 조정 */
+            padding: 6px 12px; /* 버튼 크기 조정 */
             color: #fff;
             background-color: #0056b3;
             text-decoration: none;
-            border-radius: 4px;
+            border-radius: 8px; /* 약간 곡선이 있는 네모 */
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
         }
         a:hover {
             background-color: #004494;
+            transform: scale(1.05);
+        }
+        footer {
+            text-align: center;
+            margin: 40px 0;
+            font-size: 0.9em;
+            color: #777;
         }
     </style>
 </head>
@@ -68,17 +93,23 @@
     <div class="table-container">
         {{ duplicated_names|safe }}
     </div>
+    <div class="divider"></div> <!-- 연한 직선 추가 -->
 
     <h2>이름 개수가 일치하지 않는 교육 확인</h2>
     <a href="/download/{{ mismatch_file }}">파일 다운로드</a>
     <div class="table-container">
         {{ name_mismatch|safe }}
     </div>
+    <div class="divider"></div> <!-- 연한 직선 추가 -->
 
     <h2>과정명 띄어쓰기 제거 후 비교</h2>
     <a href="/download/{{ comparison_file }}">파일 다운로드</a>
     <div class="table-container">
         {{ comparison|safe }}
     </div>
+
+    <footer>
+        &copy; 2024 나의 웹 애플리케이션
+    </footer>
 </body>
 </html>
