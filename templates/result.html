@@ -8,10 +8,9 @@
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 0 40px; /* 좌우 여백을 늘림 */
             background: linear-gradient(135deg, #f9f9f9, #e0e0e0);
             color: #333;
-            padding: 0 20px; /* 좌우 여백 추가 */
         }
         h1 {
             text-align: center;
@@ -26,7 +25,7 @@
             100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
         }
         h2 {
-            margin: 20px 0 10px; /* 위쪽 여백 조정 */
+            margin: 30px 0 10px; /* 위쪽 여백 조정 */
             color: #333;
             text-align: justify; /* 양쪽 정렬 */
             font-size: 1.8em;
@@ -38,12 +37,12 @@
         }
         .table-container {
             overflow-x: auto;
-            margin: 10px auto;
-            max-width: 90%;
+            margin: 0; /* 여백 제거 */
+            max-width: 100%; /* 최대 너비를 100%로 설정 */
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             background-color: #fff;
-            padding: 20px;
+            padding: 20px; /* 내부 여백 조정 가능 */
         }
         table {
             border-collapse: collapse;
@@ -64,7 +63,7 @@
         }
         a {
             display: inline-block;
-            margin: 5px auto; /* 버튼과 h2 사이 여백 조정 */
+            margin: 10px 0; /* 위아래 여백을 table-container와 일치시키기 */
             padding: 6px 12px; /* 버튼 크기 조정 */
             color: #fff;
             background-color: #0056b3;
@@ -109,7 +108,7 @@
     </div>
 
     <footer>
-        &copy; 2024 나의 웹 애플리케이션
+        &copy; 2024 최은주. All rights reserved. | Version 1.1
     </footer>
 </body>
 </html>
