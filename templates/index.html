@@ -146,6 +146,11 @@
             color: #1e6a91;
         }
 
+        label {
+            margin-bottom: 20px;
+            display: block;
+        }
+
         /* 반응형 디자인 추가 */
         @media (max-width: 800px) {
             h1 {
@@ -182,6 +187,9 @@
 
     <form action="/upload" method="post" enctype="multipart/form-data">
         <h3>CSV 파일을 업로드해주세요.</h3>
+        <label>
+            <input type="checkbox" name="include_date" value="yes"> 교육일시를 포함하여 중복된 데이터 확인
+        </label>
         <input type="file" name="file" required>
         <button type="submit">업로드</button>
     </form>

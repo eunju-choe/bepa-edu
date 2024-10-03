@@ -43,8 +43,15 @@ def upload_file():
     df = df.rename(columns={'교육\n일시': '교육일시', '교육\n시간': '교육시간'})
     df[['연번', '교육시간']] = df[['연번', '교육시간']].astype('int')
     
-    # 중복된 이름이 있는 데이터 추출
-    duplicated_names = df[df.duplicated(subset=['이름', '구분1(외부/내부)', '구분2(법정의무/직무역량)', '과정구분3', '과정명'], keep=False)]
+    # 체크박스 선택 여부 확인
+    include_date = request.form.get('include_date') == 'yes'
+
+    # 중복된 이름이 있는 데이터 추출 (체크박스 선택 시 '교육일시' 포함)
+    subset_columns = ['이름', '구분1(외부/내부)', '구분2(법정의무/직무역량)', '과정구분3', '과정명']
+    if include_date:
+        subset_columns.append('교육일시')
+
+    duplicated_names = df[df.duplicated(subset=subset_columns, keep=False)]
     duplicated_names = duplicated_names.sort_values(by=['이름', '과정명'])
 
     # 이름 개수 불일치 확인
