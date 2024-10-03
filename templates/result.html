@@ -22,10 +22,13 @@
             margin-top: 40px;
             color: #333;
         }
+        .table-container {
+            overflow-x: auto; /* 가로 스크롤 추가 */
+            margin-top: 10px;
+        }
         table {
             border-collapse: collapse;
             width: 100%;
-            margin-top: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             background-color: #fff;
         }
@@ -33,6 +36,7 @@
             border: 1px solid #ddd;
             padding: 12px;
             text-align: left;
+            white-space: nowrap; /* 줄바꿈 방지 */
         }
         th {
             background-color: #f2f2f2;
@@ -61,14 +65,20 @@
 
     <h2>중복 데이터 확인</h2>
     <a href="/download/{{ duplicated_file }}">파일 다운로드</a>
-    {{ duplicated_names|safe }}
+    <div class="table-container">
+        {{ duplicated_names|safe }}
+    </div>
 
     <h2>이름 개수가 일치하지 않는 교육 확인</h2>
     <a href="/download/{{ mismatch_file }}">파일 다운로드</a>
-    {{ name_mismatch|safe }}
+    <div class="table-container">
+        {{ name_mismatch|safe }}
+    </div>
 
     <h2>과정명 띄어쓰기 제거 후 비교</h2>
     <a href="/download/{{ comparison_file }}">파일 다운로드</a>
-    {{ comparison|safe }}
+    <div class="table-container">
+        {{ comparison|safe }}
+    </div>
 </body>
 </html>
