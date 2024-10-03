@@ -59,15 +59,23 @@ def upload_file():
     name_mismatch = name_counts[name_counts['이름개수'] != name_counts['고유개수']]
 
     # 띄어쓰기 제거 및 비교
-    tmp1 = df.groupby('과정명').size().reset_index(name='연번')
+    tmp1 = df.groupby('과정명').size().reset_index(name='제거 전')
     tmp1['과정명'] = tmp1['과정명'].str.replace(' ', '', regex=False)
 
     tmp2 = df.copy()
     tmp2['과정명'] = tmp2['과정명'].str.replace(' ', '', regex=False)
-    tmp2 = tmp2.groupby('과정명').size().reset_index(name='연번')
+    tmp2 = tmp2.groupby('과정명').size().reset_index(name='제거 후')
 
     tmp = pd.merge(tmp1, tmp2, on='과정명', how='outer')
-    tmp['일치 여부'] = tmp['연번_x'] == tmp['연번_y']
+    tmp['일치 여부'] = tmp['제거 전'] == tmp['제거 후']
+    tmp = tmp[tmp['일치 여부']==False]
+
+    tmp = tmp.groupby('과정명').agg({
+        "제거 전" : lambda x: ", ".join(map(str, x)),
+        "제거 후" : "first"
+    }).reset_index()
+
+    tmp.columns = ['과정명', '구분 별 개수', '전체 개수']
 
     # 파일 저장 경로 설정
     duplicated_file = os.path.join(app.config['PROCESSED_FOLDER'], 'duplicated_names.csv')
@@ -77,13 +85,13 @@ def upload_file():
     # 처리된 데이터 저장
     duplicated_names.to_csv(duplicated_file, index=False, encoding='CP949')
     name_mismatch[['과정명', '고유개수', '이름개수']].to_csv(mismatch_file, index=False, encoding='CP949')
-    tmp[tmp['일치 여부'] == False].to_csv(comparison_file, index=False, encoding='CP949')
+    tmp.to_csv(comparison_file, index=False, encoding='CP949')
 
     # 처리된 데이터프레임을 HTML로 변환하여 보여주기
     return render_template('result.html', 
                            duplicated_names=duplicated_names.to_html(index=False, escape=False),
                            name_mismatch=name_mismatch[['과정명', '고유개수', '이름개수']].to_html(index=False, escape=False),
-                           comparison=tmp[tmp['일치 여부'] == False].to_html(index=False, escape=False),
+                           comparison=tmp.to_html(index=False, escape=False),
                            duplicated_file='duplicated_names.csv',
                            mismatch_file='name_mismatch.csv',
                            comparison_file='comparison.csv')
