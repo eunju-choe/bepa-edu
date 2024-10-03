@@ -29,15 +29,13 @@ def upload_file():
     if file.filename == '':
         return "파일 이름이 없습니다."
     
-    # Excel 파일 저장
+    # CSV 파일 저장
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
     file.save(file_path)
     
-    # Excel 파일 처리 (특정 시트: 'Raw Data')
-    df = pd.read_excel(file_path, sheet_name='Raw Data', encoding='utf-8-sig')
-    
-    # 기존 CSV 처리 코드와 동일
-    df = df.dropna(subset=['연번', '이름']).drop(columns=['비고1', '비고2', 'Unnamed: 14'], errors='ignore')
+    # CSV 파일 처리
+    df = pd.read_csv(fe_path, encoding='CP949', skiprows=1)
+    df = df.dropna(subset=['연번', '이름']).drop(columns=['비고1', '비고2', 'Unnamed: 14'])
     df = df.rename(columns={'교육\n일시': '교육일시', '교육\n시간': '교육시간'})
     df[['연번', '교육시간']] = df[['연번', '교육시간']].astype('int')
     
