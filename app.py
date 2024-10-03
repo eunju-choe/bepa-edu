@@ -83,7 +83,7 @@ def upload_file():
         "띄어쓰기 제거 전" : lambda x: ", ".join(map(str, x)),
         "띄어쓰기 제거 후" : "first"
     }).reset_index()
-    space_df.colmns = ['과정명', '구분 별 개수', '전체 개수']
+    space_df.columns = ['과정명', '구분 별 개수', '전체 개수']
 
     bracket_df = pd.merge(bracket_yes, bracket_no, on='과정명', how='outer')
     bracket_df['일치 여부'] = bracket_df['괄호 제거 전'] == bracket_df['괄호 제거 후']
@@ -92,7 +92,7 @@ def upload_file():
         "괄호 제거 전" : lambda x: ", ".join(map(str, x)),
         "괄호 제거 후" : "first"
     }).reset_index()
-    bracket_df.colmns = ['과정명', '구분 별 개수', '전체 개수']
+    bracket_df.columns = ['과정명', '구분 별 개수', '전체 개수']
 
     # 파일 저장 경로 설정
     duplicated_file = os.path.join(app.config['PROCESSED_FOLDER'], 'duplicated_names.csv')
@@ -111,7 +111,7 @@ def upload_file():
                            duplicated_names=duplicated_names.to_html(index=False, escape=False),
                            name_mismatch=name_mismatch[['과정명', '고유개수', '이름개수']].to_html(index=False, escape=False),
                            space_comparison=space_df.to_html(index=False, escape=False),
-                           bracket_comparison=bracket_df.to_csv(index=False, escape=False),
+                           bracket_comparison=bracket_df.to_html(index=False, escape=False),
                            duplicated_file='duplicated_names.csv',
                            mismatch_file='name_mismatch.csv',
                            space_comparison_file='space_comparison.csv',
