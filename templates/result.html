@@ -91,28 +91,7 @@
     <h2>중복 데이터 확인</h2>
     <a href="/download/{{ duplicated_file }}">파일 다운로드</a>
     <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>연번</th>
-                    <th>이름</th>
-                    <th>구분1</th>
-                    <th>구분2</th>
-                    <th>과정명</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in duplicated_names.iterrows() %}
-                <tr style="background-color: {{ row[1]['색상'] }};"> <!-- 색상 적용 -->
-                    <td>{{ row[1]['연번'] }}</td>
-                    <td>{{ row[1]['이름'] }}</td>
-                    <td>{{ row[1]['구분1(외부/내부)'] }}</td>
-                    <td>{{ row[1]['구분2(법정의무/직무역량)'] }}</td>
-                    <td>{{ row[1]['과정명'] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        {{ duplicated_names|safe }}
     </div>
     <div class="divider"></div> <!-- 연한 직선 추가 -->
 

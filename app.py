@@ -19,18 +19,6 @@ os.makedirs(PROCESSED_FOLDER, exist_ok=True)
 def index():
     return render_template('index.html')
 
-# 중복된 이름에 색상 추가
-def colorize_duplicates(df):
-    # 색상 리스트
-    colors = ['#ffcccc', '#ccffcc', '#ccccff', '#ffffcc', '#ffccff']
-    df['색상'] = None
-    
-    # 중복된 이름 그룹핑
-    for i, group in enumerate(df.groupby(['이름', '구분1(외부/내부)', '구분2(법정의무/직무역량)', '과정구분3', '과정명'])):
-        df.loc[group[1].index, '색상'] = colors[i % len(colors)]
-    
-    return df
-
 # 파일 업로드 및 처리
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -58,9 +46,6 @@ def upload_file():
     # 중복된 이름이 있는 데이터 추출
     duplicated_names = df[df.duplicated(subset=['이름', '구분1(외부/내부)', '구분2(법정의무/직무역량)', '과정구분3', '과정명'], keep=False)]
     duplicated_names = duplicated_names.sort_values(by=['이름', '과정명'])
-
-    # 중복된 데이터에 색상 추가
-    duplicated_names = colorize_duplicates(duplicated_names)
 
     # 이름 개수 불일치 확인
     name_counts = df.groupby('과정명')['이름'].agg(고유개수='nunique', 이름개수='count').reset_index()
