@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_file
+from flask import Flask, request, render_template
 import pandas as pd
 import os
 
@@ -58,30 +58,11 @@ def upload_file():
     tmp = pd.merge(tmp1, tmp2, on='과정명', how='outer')
     tmp['일치 여부'] = tmp['연번_x'] == tmp['연번_y']
 
-    # 파일 저장 경로 설정
-    duplicated_file = os.path.join(app.config['PROCESSED_FOLDER'], 'duplicated_names.csv')
-    mismatch_file = os.path.join(app.config['PROCESSED_FOLDER'], 'name_mismatch.csv')
-    comparison_file = os.path.join(app.config['PROCESSED_FOLDER'], 'comparison.csv')
-
-    # 처리된 데이터 저장
-    duplicated_names.to_csv(duplicated_file, index=False, encoding='CP949')
-    name_mismatch[['과정명', '고유개수', '이름개수']].to_csv(mismatch_file, index=False, encoding='CP949')
-    tmp[tmp['일치 여부'] == False].to_csv(comparison_file, index=False, encoding='CP949')
-
     # 처리된 데이터프레임을 HTML로 변환하여 보여주기
     return render_template('result.html', 
                            duplicated_names=duplicated_names.to_html(index=False),
                            name_mismatch=name_mismatch[['과정명', '고유개수', '이름개수']].to_html(index=False),
-                           comparison=tmp[tmp['일치 여부'] == False].to_html(index=False),
-                           duplicated_file='duplicated_names.csv',
-                           mismatch_file='name_mismatch.csv',
-                           comparison_file='comparison.csv')
-
-# 파일 다운로드 처리
-@app.route('/download/<filename>')
-def download_file(filename):
-    file_path = os.path.join(app.config['PROCESSED_FOLDER'], filename)
-    return send_file(file_path, as_attachment=True)
+                           comparison=tmp[tmp['일치 여부'] == False].to_html(index=False))
 
 if __name__ == '__main__':
     app.run(debug=True)
