@@ -34,7 +34,11 @@ def upload_file():
     file.save(file_path)
     
     # CSV 파일 처리
-    df = pd.read_csv(fe_path, encoding='CP949', skiprows=1)
+    try:
+        df = pd.read_csv(file_path, encoding='CP949', skiprows=1)
+    except Exception as e:
+        return f"CSV 파일을 처리하는 중 오류가 발생했습니다: {str(e)}"
+    
     df = df.dropna(subset=['연번', '이름']).drop(columns=['비고1', '비고2', 'Unnamed: 14'])
     df = df.rename(columns={'교육\n일시': '교육일시', '교육\n시간': '교육시간'})
     df[['연번', '교육시간']] = df[['연번', '교육시간']].astype('int')
@@ -70,9 +74,9 @@ def upload_file():
 
     # 처리된 데이터프레임을 HTML로 변환하여 보여주기
     return render_template('result.html', 
-                           duplicated_names=duplicated_names.to_html(index=False),
-                           name_mismatch=name_mismatch[['과정명', '고유개수', '이름개수']].to_html(index=False),
-                           comparison=tmp[tmp['일치 여부'] == False].to_html(index=False),
+                           duplicated_names=duplicated_names.to_html(index=False, escape=False),
+                           name_mismatch=name_mismatch[['과정명', '고유개수', '이름개수']].to_html(index=False, escape=False),
+                           comparison=tmp[tmp['일치 여부'] == False].to_html(index=False, escape=False),
                            duplicated_file='duplicated_names.csv',
                            mismatch_file='name_mismatch.csv',
                            comparison_file='comparison.csv')
