@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            background-color: #f9f9f9;
+            background: linear-gradient(to right, #ece9e6, #ffffff);
             color: #333;
             display: flex;
             flex-direction: column;
@@ -17,31 +17,66 @@
             min-height: 100vh;
             margin: 0;
             padding: 0;
+            padding-top: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+            max-width: 800px;
         }
 
         img {
-            width: 200px;
+            width: 250px;
             height: auto;
             margin-bottom: 10px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
             opacity: 0.9;
-            transition: opacity 0.3s ease-in-out;
         }
 
         img:hover {
             opacity: 1;
+            transform: scale(1.05);
         }
 
         h1 {
-            font-size: 2.5rem;
-            color: #2c3e50;
+            font-size: 3rem;
+            color: #2980b9;
             font-weight: 700;
             margin: 20px 0;
+            text-align: center;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        p {
-            font-size: 1rem;
-            color: #7f8c8d;
-            margin: 5px 0;
+        h3 {
+            font-size: 1.5rem;
+            color: #34495e;
+            margin: 10px 0;
+            text-align: justify;
+        }
+
+        .instruction {
+            margin: 20px;
+            padding: 15px;
+            background-color: #e1f5fe;
+            border: 1px solid #90caf9;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 100%;
+            text-align: justify;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .instruction p {
+            text-align: justify;
+        }
+
+        ol {
+            padding-left: 20px;
+            list-style: decimal;
         }
 
         form {
@@ -50,8 +85,13 @@
             background-color: #ffffff;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
+            max-width: 800px;
             width: 100%;
+        }
+
+        form h3 {
+            text-align: justify;
+            color: #34495e;
         }
 
         input[type="file"] {
@@ -59,8 +99,8 @@
             border-radius: 5px;
             border: 1px solid #bdc3c7;
             margin-bottom: 20px;
-            width: 100%; /* 입력 필드가 박스를 넘지 않도록 100% 너비 설정 */
-            box-sizing: border-box; /* 파일 입력 필드가 박스 모델 안에 맞도록 조정 */
+            width: 100%;
+            box-sizing: border-box;
             background-color: #f3f4f7;
             transition: border-color 0.3s ease-in-out;
         }
@@ -78,12 +118,13 @@
             border-radius: 5px;
             font-size: 1rem;
             font-weight: 600;
-            transition: background-color 0.3s ease-in-out;
+            transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
             cursor: pointer;
         }
 
         button:hover {
             background-color: #1e6a91;
+            transform: translateY(-2px);
         }
 
         footer {
@@ -91,6 +132,8 @@
             font-size: 0.9rem;
             color: #95a5a6;
             text-align: center;
+            max-width: 800px;
+            width: 100%;
         }
 
         footer a {
@@ -102,19 +145,48 @@
         footer a:hover {
             color: #1e6a91;
         }
+
+        /* 반응형 디자인 추가 */
+        @media (max-width: 800px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+
+            .instruction, form, footer {
+                width: 90%;
+            }
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <img src="../static/logo.png" alt="Logo">
+    <div class="header">
+        <img src="../static/logo.png" alt="Logo">
+    </div>
     <h1>교육 담당자 서포터</h1>
-    <p>CSV 파일을 업로드해주세요.</p>
+    
+    <div class="instruction">
+        <h2>CSV 파일 업로드 방법</h2>
+        <p>엑셀 파일의 "Raw Data" 시트를 CSV 파일로 변환 후 업로드해 주세요.</p>
+        <ol>
+            <li>엑셀 파일을 열고 Raw Data 시트를 선택합니다.</li>
+            <li>'파일' 메뉴에서 '다른 이름으로 저장'을 선택합니다.</li>
+            <li>'CSV(쉼표로 구분)' 형식을 선택하고 파일을 저장합니다.</li>
+            <li>이곳에서 변환한 CSV 파일을 선택하여 업로드합니다.</li>
+        </ol>
+    </div>
+
     <form action="/upload" method="post" enctype="multipart/form-data">
+        <h3>CSV 파일을 업로드해주세요.</h3>
         <input type="file" name="file" required>
         <button type="submit">업로드</button>
     </form>
     <footer>
-        <p>&copy; 2024 최은주. All rights reserved. <a href="privacy.html">Privacy Policy</a> | Version 1.0</p>
+        <p>&copy; 2024 최은주. All rights reserved. <a href="privacy.html">Privacy Policy</a> | Version 1.1</p>
     </footer>
 </body>
 </html>
