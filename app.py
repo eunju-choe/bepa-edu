@@ -1,6 +1,7 @@
-from flask import Flask, request, render_template, send_file
-import pandas as pd
+from flask import Flask, request, render_template, send_file # type: ignore
+import pandas as pd # type: ignore
 import os
+import re
 
 app = Flask(__name__)
 
@@ -58,43 +59,63 @@ def upload_file():
     name_counts = df.groupby('과정명')['이름'].agg(고유개수='nunique', 이름개수='count').reset_index()
     name_mismatch = name_counts[name_counts['이름개수'] != name_counts['고유개수']]
 
-    # 띄어쓰기 제거 및 비교
-    tmp1 = df.groupby('과정명').size().reset_index(name='제거 전')
-    tmp1['과정명'] = tmp1['과정명'].str.replace(' ', '', regex=False)
+    # 공백과 괄호 제거 전 후 비교
+    space_yes = df.groupby('과정명').size().reset_index(name='띄어쓰기 제거 전')
+    space_yes['과정명'] = space_yes['과정명'].str.replace(' ', '', regex=False)
 
-    tmp2 = df.copy()
-    tmp2['과정명'] = tmp2['과정명'].str.replace(' ', '', regex=False)
-    tmp2 = tmp2.groupby('과정명').size().reset_index(name='제거 후')
+    bracket_yes = space_yes.groupby('과정명').sum().reset_index()
+    bracket_yes.columns = ['과정명', '괄호 제거 전']
+    bracket_yes['과정명'] = bracket_yes['과정명'].apply(lambda x:re.sub(r'\(\d+(차시|시간)\)', '', x))
 
-    tmp = pd.merge(tmp1, tmp2, on='과정명', how='outer')
-    tmp['일치 여부'] = tmp['제거 전'] == tmp['제거 후']
-    tmp = tmp[tmp['일치 여부']==False]
+    space_no = df.copy()
+    space_no['과정명'] = space_no['과정명'].str.replace(' ', '', regex=False)
+    space_no = space_no.groupby('과정명').size().reset_index(name='띄어쓰기 제거 후')
 
-    tmp = tmp.groupby('과정명').agg({
-        "제거 전" : lambda x: ", ".join(map(str, x)),
-        "제거 후" : "first"
+    bracket_no = space_no.copy()
+    bracket_no['과정명'] = bracket_no['과정명'].apply(lambda x: re.sub(r'\(\d+(차시|시간)\)', '', x))
+    bracket_no = bracket_no.groupby('과정명').sum().reset_index()
+    bracket_no.columns = ['과정명', '괄호 제거 후']
+
+    space_df = pd.merge(space_yes, space_no, on='과정명', how='outer')
+    space_df['일치 여부'] = space_df['띄어쓰기 제거 전'] == space_df['띄어쓰기 제거 후']
+    space_df = space_df[space_df['일치 여부'] == False]
+    space_df = space_df.groupby('과정명').agg({
+        "띄어쓰기 제거 전" : lambda x: ", ".join(map(str, x)),
+        "띄어쓰기 제거 후" : "first"
     }).reset_index()
+    space_df.colmns = ['과정명', '구분 별 개수', '전체 개수']
 
-    tmp.columns = ['과정명', '구분 별 개수', '전체 개수']
+    bracket_df = pd.merge(bracket_yes, bracket_no, on='과정명', how='outer')
+    bracket_df['일치 여부'] = bracket_df['괄호 제거 전'] == bracket_df['괄호 제거 후']
+    bracket_df = bracket_df[bracket_df['일치 여부'] == False]
+    bracket_df = bracket_df.groupby('과정명').agg({
+        "괄호 제거 전" : lambda x: ", ".join(map(str, x)),
+        "괄호 제거 후" : "first"
+    }).reset_index()
+    bracket_df.colmns = ['과정명', '구분 별 개수', '전체 개수']
 
     # 파일 저장 경로 설정
     duplicated_file = os.path.join(app.config['PROCESSED_FOLDER'], 'duplicated_names.csv')
     mismatch_file = os.path.join(app.config['PROCESSED_FOLDER'], 'name_mismatch.csv')
-    comparison_file = os.path.join(app.config['PROCESSED_FOLDER'], 'comparison.csv')
+    space_comparison_file = os.path.join(app.config['PROCESSED_FOLDER'], 'space_comparison.csv')
+    bracket_comparison_file = os.path.join(app.config['PROCESSED_FOLDER'], 'bracket_comparison.csv')
 
     # 처리된 데이터 저장
     duplicated_names.to_csv(duplicated_file, index=False, encoding='CP949')
     name_mismatch[['과정명', '고유개수', '이름개수']].to_csv(mismatch_file, index=False, encoding='CP949')
-    tmp.to_csv(comparison_file, index=False, encoding='CP949')
+    space_df.to_csv(space_comparison_file, index=False, encoding='CP949')
+    bracket_df.to_csv(bracket_comparison_file, index=False, encoding='CP949')
 
     # 처리된 데이터프레임을 HTML로 변환하여 보여주기
     return render_template('result.html', 
                            duplicated_names=duplicated_names.to_html(index=False, escape=False),
                            name_mismatch=name_mismatch[['과정명', '고유개수', '이름개수']].to_html(index=False, escape=False),
-                           comparison=tmp.to_html(index=False, escape=False),
+                           space_comparison=space_df.to_html(index=False, escape=False),
+                           bracket_comparison=bracket_df.to_csv(index=False, escape=False),
                            duplicated_file='duplicated_names.csv',
                            mismatch_file='name_mismatch.csv',
-                           comparison_file='comparison.csv')
+                           space_comparison_file='space_comparison.csv',
+                           bracket_comparison_file='bracket_comparison.csv')
 
 # 파일 다운로드 처리
 @app.route('/download/<filename>')
