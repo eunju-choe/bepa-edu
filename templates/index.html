@@ -7,42 +7,114 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
-            padding: 50px;
-        }
-        img {
-            width: 300px; /* 로고의 너비 */
-            height: auto; /* 비율을 유지하면서 높이 조절 */
-        }
-        h1 {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f9f9f9;
             color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
         }
-        p {
+
+        img {
+            width: 200px;
+            height: auto;
+            margin-bottom: 10px;
+            opacity: 0.9;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        img:hover {
+            opacity: 1;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            font-weight: 700;
             margin: 20px 0;
         }
-        a {
-            display: inline-block;
-            padding: 10px 20px;
-            color: white;
-            background-color: #007bff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
+
+        p {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin: 5px 0;
         }
-        a:hover {
-            background-color: #0056b3;
+
+        form {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #bdc3c7;
+            margin-bottom: 20px;
+            width: 100%; /* 입력 필드가 박스를 넘지 않도록 100% 너비 설정 */
+            box-sizing: border-box; /* 파일 입력 필드가 박스 모델 안에 맞도록 조정 */
+            background-color: #f3f4f7;
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        input[type="file"]:hover {
+            border-color: #3498db;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px 0;
+            color: white;
+            background-color: #2980b9;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1e6a91;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #95a5a6;
+            text-align: center;
+        }
+
+        footer a {
+            color: #2980b9;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #1e6a91;
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
-    <h1>CSV 파일 업로드</h1>
-    <p>업로드할 CSV 파일을 선택하세요.</p>
+    <img src="../static/logo.png" alt="Logo">
+    <h1>교육 담당자 서포터</h1>
+    <p>CSV 파일을 업로드해주세요.</p>
     <form action="/upload" method="post" enctype="multipart/form-data">
         <input type="file" name="file" required>
         <button type="submit">업로드</button>
     </form>
+    <footer>
+        <p>&copy; 2024 최은주. All rights reserved. <a href="privacy.html">Privacy Policy</a> | Version 1.0</p>
+    </footer>
 </body>
 </html>

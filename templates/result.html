@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>처리 결과</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>중복된 이름이 있는 데이터</h1>
+    {{ duplicated_names|safe }}
+
+    <h1>이름 개수 불일치 확인</h1>
+    {{ name_mismatch|safe }}
+
+    <h1>띄어쓰기 제거 후 비교</h1>
+    {{ comparison|safe }}
+
+</body>
+</html>
