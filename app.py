@@ -39,13 +39,21 @@ def upload_file():
     except Exception as e:
         return f"CSV 파일을 처리하는 중 오류가 발생했습니다: {str(e)}"
     
+    # highlight_duplicates 함수 정의
+    def highlight_duplicates(df, color_class='highlight'):
+        # 중복된 이름 목록 생성
+        duplicated_names = df['이름'][df.duplicated('이름', keep=False)].unique()
+        # 중복된 이름을 갖는 행에 색상 클래스 추가
+        df['highlight'] = df['이름'].apply(lambda x: color_class if x in duplicated_names else '')
+        return df
+
     df = df.dropna(subset=['연번', '이름']).drop(columns=['비고1', '비고2', 'Unnamed: 14'])
     df = df.rename(columns={'교육\n일시': '교육일시', '교육\n시간': '교육시간'})
     df[['연번', '교육시간']] = df[['연번', '교육시간']].astype('int')
     
     # 중복된 이름이 있는 데이터 추출
     duplicated_names = df[df.duplicated(subset=['이름', '구분1(외부/내부)', '구분2(법정의무/직무역량)', '과정구분3', '과정명'], keep=False)]
-    duplicated_names = duplicated_names.sort_values(by=['이름', '과정명'])
+    duplicated_names = highlight_duplicates(duplicated_names)  # 중복 강조
 
     # 이름 개수 불일치 확인
     name_counts = df.groupby('과정명')['이름'].agg(고유개수='nunique', 이름개수='count').reset_index()
@@ -62,6 +70,9 @@ def upload_file():
     tmp = pd.merge(tmp1, tmp2, on='과정명', how='outer')
     tmp['일치 여부'] = tmp['연번_x'] == tmp['연번_y']
 
+    # 중복된 이름 강조
+    tmp = highlight_duplicates(tmp)  # 비교 데이터 강조
+
     # 파일 저장 경로 설정
     duplicated_file = os.path.join(app.config['PROCESSED_FOLDER'], 'duplicated_names.csv')
     mismatch_file = os.path.join(app.config['PROCESSED_FOLDER'], 'name_mismatch.csv')
@@ -73,10 +84,14 @@ def upload_file():
     tmp[tmp['일치 여부'] == False].to_csv(comparison_file, index=False, encoding='CP949')
 
     # 처리된 데이터프레임을 HTML로 변환하여 보여주기
+    duplicated_names_html = duplicated_names.to_html(index=False, escape=False, classes='dataframe', border=0)
+    name_mismatch_html = name_mismatch[['과정명', '고유개수', '이름개수']].to_html(index=False, escape=False, classes='dataframe', border=0)
+    comparison_html = tmp[tmp['일치 여부'] == False].to_html(index=False, escape=False, classes='dataframe', border=0)
+
     return render_template('result.html', 
-                           duplicated_names=duplicated_names.to_html(index=False, escape=False),
-                           name_mismatch=name_mismatch[['과정명', '고유개수', '이름개수']].to_html(index=False, escape=False),
-                           comparison=tmp[tmp['일치 여부'] == False].to_html(index=False, escape=False),
+                           duplicated_names=duplicated_names_html,
+                           name_mismatch=name_mismatch_html,
+                           comparison=comparison_html,
                            duplicated_file='duplicated_names.csv',
                            mismatch_file='name_mismatch.csv',
                            comparison_file='comparison.csv')
