@@ -4,20 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>처리 결과</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+            margin-top: 40px; /* 제목 위 여백 추가 */
+            margin-bottom: 20px; /* 제목 아래 여백 추가 */
+        }
+        h2 {
+            margin-top: 40px;
+            color: #333;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        td.highlight {
+            background-color: #ffdddd; /* 중복된 데이터 강조 */
+        }
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            padding: 8px 15px;
+            color: #fff;
+            background-color: #0056b3;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        a:hover {
+            background-color: #004494;
+        }
+    </style>
 </head>
 <body>
     <h1>처리 결과</h1>
 
-    <h2>중복된 이름</h2>
+    <h2>중복 데이터 확인</h2>
+    <a href="/download/{{ duplicated_file }}">파일 다운로드</a>
     {{ duplicated_names|safe }}
-    <a href="/download/{{ duplicated_file }}">중복된 이름 CSV 다운로드</a>
 
-    <h2>이름 개수 불일치</h2>
+    <h2>이름 개수가 일치하지 않는 교육 확인</h2>
+    <a href="/download/{{ mismatch_file }}">파일 다운로드</a>
     {{ name_mismatch|safe }}
-    <a href="/download/{{ mismatch_file }}">이름 개수 불일치 CSV 다운로드</a>
 
-    <h2>과정명 비교</h2>
+    <h2>과정명 띄어쓰기 제거 후 비교</h2>
+    <a href="/download/{{ comparison_file }}">파일 다운로드</a>
     {{ comparison|safe }}
-    <a href="/download/{{ comparison_file }}">과정명 비교 CSV 다운로드</a>
 </body>
 </html>
